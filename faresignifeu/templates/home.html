@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Ignifeu - Accueil</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/image.png') }}">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Général - Styles pour tous les appareils */
+        body, html {
+            font-family: 'Arial', sans-serif;
+            background-color: #333;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+        }
+        
+        header {
+            background-color: #222;
+            padding: 10px;
+            text-align: center;
+        }
+        @media screen and (max-width: 768px) {
+            .btn-container {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                margin: 10px 0;
+            }
+        
+            .btn-green {
+                width: 80%;
+                font-size: 14px;
+                padding: 8px 15px;
+            }
+        }
+        
+        @media screen and (max-width: 480px) {
+            .btn-green {
+                width: 90%;
+                font-size: 12px;
+                padding: 7px 10px;
+            }
+        }
+        
+        header img {
+            width: 80px; /* Réduction de la taille des images pour les petits écrans */
+            height: auto;
+            margin-right: 10px;
+        }
+        
+        .services-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            padding: 10px;
+        }
+        
+        .service-card {
+            background-color: #444;
+            border-radius: 10px;
+            width: 45%; /* Ajusté pour 2 cartes par ligne sur les écrans moyens */
+            margin: 10px;
+            padding: 10px;
+            cursor: pointer;
+            transition: transform 0.3s;
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+        
+        .service-card:hover {
+            transform: scale(1.05);
+        }
+        
+        .service-card img {
+            width: 100%;
+            height: 150px; /* Réduction de la hauteur de l'image */
+            object-fit: cover;
+            border-radius: 5px;
+        }
+        
+        .service-icon {
+            font-size: 20px; /* Ajustement de la taille de l'icône */
+            color: #fff;
+            margin-right: 10px;
+        }
+        
+        .service-info {
+            flex-grow: 1;
+        }
+        
+        .service-info h2 {
+            margin-top: 10px;
+            font-size: 16px; /* Réduction de la taille du texte */
+            color: #fff;
+        }
+        
+        .popup {
+            display: none; /* Caché par défaut */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        
+        .popup-content {
+            background: #fff;
+            color: #000;
+            padding: 15px; /* Réduction du padding */
+            border-radius: 10px;
+            width: 90%;
+            max-width: 400px; /* Réduction de la largeur maximale */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .popup-description {
+            padding: 10px;
+        }
+        
+        .popup-image {
+            padding: 10px;
+        }
+        
+        .popup-image img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
+        
+        .popup-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 20px; /* Réduction de la taille de la police */
+            cursor: pointer;
+            color: #fff;
+        }
+        
+        .order-button {
+            margin-top: 20px;
+            padding: 8px 16px; /* Réduction du padding */
+            font-size: 14px; /* Réduction de la taille de la police */
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .order-button:hover {
+            background-color: #0056b3;
+        }
+        
+        .btn-green {
+            background-color: #008000; /* Vert */
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 16px; /* Réduction du padding */
+            font-size: 14px; /* Réduction de la taille de la police */
+            cursor: pointer;
+            text-decoration: none;
+            margin: 5px;
+        }
+        
+        .btn-green:hover {
+            background-color: #005700; /* Vert plus foncé pour l'effet hover */
+        }
+        
+        /* Pied de page */
+        .footer {
+            background-color: #222; /* Même couleur que la barre de navigation */
+            color: #fff;
+            padding: 15px; /* Réduction du padding */
+            text-align: center;
+            width: 100%;
+            position: relative; /* S'assurer qu'il reste en bas */
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.3);
+        }
+        
+        .footer-content h2 {
+            margin-bottom: 10px;
+        }
+        
+        .footer-content p {
+            margin: 5px 0;
+        }
+        
+        /* Media Queries pour l'adaptation */
+        @media (max-width: 768px) {
+            .service-card {
+                width: 48%; /* Deux cartes par ligne sur des écrans moyens */
+            }
+            header img {
+                width: 60px;
+            }
+            .order-button, .btn-green {
+                font-size: 12px; /* Ajustement de la taille de la police */
+                padding: 6px 12px; /* Ajustement du padding */
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .service-card {
+                width: 100%; /* Une carte par ligne sur des petits écrans */
+            }
+            header img {
+                width: 50px; /* Réduction supplémentaire de la taille des images */
+            }
+            .order-button, .btn-green {
+                font-size: 12px;
+                padding: 6px 10px;
+            }
+            .popup-content {
+                width: 95%;
+                max-width: 350px;
+                padding: 10px;
+            }
+            .popup-description, .popup-image {
+                padding: 5px;
+            }
+        }
+        body, html {
+            font-family: 'Arial', sans-serif;
+            background-color: #333;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+        }
+        
+        header {
+            background-color: #222;
+            padding: 10px;
+            text-align: center;
+        }
+        
+        header img {
+            width: 80px;
+            height: auto;
+            margin-right: 10px;
+        }
+        
+        .services-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            padding: 10px;
+        }
+        
+        .service-card {
+            background-color: #444;
+            border-radius: 10px;
+            width: 45%; /* Ajusté pour 2 cartes par ligne sur les écrans moyens */
+            margin: 10px;
+            padding: 10px;
+            cursor: pointer;
+            transition: transform 0.3s;
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+        
+        .service-card:hover {
+            transform: scale(1.05);
+        }
+        
+        .service-card img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+        
+        .service-icon {
+            font-size: 20px;
+            color: #fff;
+            margin-right: 10px;
+        }
+        
+        .service-info {
+            flex-grow: 1;
+        }
+        
+        .service-info h2 {
+            margin-top: 10px;
+            font-size: 16px;
+            color: #fff;
+        }
+        
+        .popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        
+        .popup-content {
+            background: #fff;
+            color: #000;
+            padding: 15px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 400px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .popup-description {
+            padding: 10px;
+        }
+        
+        .popup-image {
+            padding: 10px;
+        }
+        
+        .popup-image img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
+        
+        .popup-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 20px;
+            cursor: pointer;
+            color: #fff;
+        }
+        
+        .order-button {
+            margin-top: 20px;
+            padding: 8px 16px;
+            font-size: 14px;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .order-button:hover {
+            background-color: #0056b3;
+        }
+        
+        .btn-green {
+            background-color: #008000;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            text-decoration: none;
+            margin: 5px;
+        }
+        
+        .btn-green:hover {
+            background-color: #005700;
+        }
+        
+        /* Pied de page */
+        .footer {
+            background-color: #222;
+            color: #fff;
+            padding: 15px;
+            text-align: center;
+            width: 100%;
+            position: relative;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.3);
+        }
+        
+        .footer-content h2 {
+            margin-bottom: 10px;
+        }
+        
+        .footer-content p {
+            margin: 5px 0;
+        }
+        
+        /* Media Queries pour l'adaptation */
+        @media (min-width: 1024px) {
+            .service-card {
+                width: 22%; /* Quatre cartes par ligne sur les écrans d'ordinateurs */
+            }
+            header img {
+                width: 100px; /* Taille des images sur les écrans de PC */
+            }
+            .order-button, .btn-green {
+                font-size: 16px; /* Taille des boutons sur les écrans de PC */
+                padding: 10px 20px; /* Padding des boutons sur les écrans de PC */
+            }
+            .popup-content {
+                max-width: 800px; /* Largeur maximale du popup sur les écrans de PC */
+                padding: 20px; /* Padding du popup sur les écrans de PC */
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .service-card {
+                width: 48%;
+            }
+            header img {
+                width: 60px;
+            }
+            .order-button, .btn-green {
+                font-size: 12px;
+                padding: 6px 12px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .service-card {
+                width: 100%;
+            }
+            header img {
+                width: 50px;
+            }
+            .order-button, .btn-green {
+                font-size: 12px;
+                padding: 6px 10px;
+            }
+            .popup-content {
+                width: 95%;
+                max-width: 350px;
+                padding: 10px;
+            }
+            .popup-description, .popup-image {
+                padding: 5px;
+            }
+        }
+        body, html {
+    font-family: 'Arial', sans-serif;
+    background-color: #333;
+    color: #fff;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: #222;
+    padding: 10px;
+    text-align: center;
+}
+
+header img {
+    width: 80px;
+    height: auto;
+    margin-right: 10px;
+}
+
+.services-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    padding: 10px;
+}
+
+.service-card {
+    background-color: #444;
+    border-radius: 10px;
+    width: 45%; /* Ajusté pour 2 cartes par ligne sur les écrans moyens */
+    margin: 10px;
+    padding: 10px;
+    cursor: pointer;
+    transition: transform 0.3s;
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.service-card:hover {
+    transform: scale(1.05);
+}
+
+.service-card img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.service-icon {
+    font-size: 20px;
+    color: #fff;
+    margin-right: 10px;
+}
+
+.service-info {
+    flex-grow: 1;
+}
+
+.service-info h2 {
+    margin-top: 10px;
+    font-size: 16px;
+    color: #fff;
+}
+
+.popup {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.popup-content {
+    background: #fff;
+    color: #000;
+    padding: 15px;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.popup-description {
+    padding: 10px;
+}
+
+.popup-image {
+    padding: 10px;
+}
+
+.popup-image img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+}
+
+.popup-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 20px;
+    cursor: pointer;
+    color: #fff;
+}
+
+.order-button {
+    margin-top: 20px;
+    padding: 8px 16px;
+    font-size: 14px;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.order-button:hover {
+    background-color: #0056b3;
+}
+
+.btn-green {
+    background-color: #008000;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 16px;
+    font-size: 14px;
+    cursor: pointer;
+    text-decoration: none;
+    margin: 5px;
+}
+
+.btn-green:hover {
+    background-color: #005700;
+}
+
+/* Pied de page */
+.footer {
+    background-color: #222;
+    color: #fff;
+    padding: 15px;
+    text-align: center;
+    width: 100%;
+    position: relative;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.footer-content h2 {
+    margin-bottom: 10px;
+}
+
+.footer-content p {
+    margin: 5px 0;
+}
+
+/* Media Queries pour l'adaptation */
+@media (min-width: 1024px) {
+    .service-card {
+        width: 22%; /* Quatre cartes par ligne sur les écrans d'ordinateurs */
+    }
+    header img {
+        width: 100px; /* Taille des images sur les écrans de PC */
+    }
+    .order-button, .btn-green {
+        font-size: 16px; /* Taille des boutons sur les écrans de PC */
+        padding: 10px 20px; /* Padding des boutons sur les écrans de PC */
+    }
+    .popup-content {
+        max-width: 800px; /* Largeur maximale du popup sur les écrans de PC */
+        padding: 20px; /* Padding du popup sur les écrans de PC */
+    }
+}
+
+@media (max-width: 768px) {
+    .service-card {
+        width: 48%;
+    }
+    header img {
+        width: 60px;
+    }
+    .order-button, .btn-green {
+        font-size: 12px;
+        padding: 6px 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .service-card {
+        width: 100%; /* Une carte par ligne sur des petits écrans */
+    }
+    header img {
+        width: 50px; /* Réduction de la taille du logo */
+    }
+    .order-button, .btn-green {
+        font-size: 12px; /* Taille de police plus petite pour les boutons */
+        padding: 6px 10px;
+    }
+    .popup-content {
+        width: 95%;
+        max-width: 350px;
+        padding: 10px;
+    }
+    .popup-description, .popup-image {
+        padding: 5px;
+    }
+}
+
+h3 {
+    text-align: center;
+    color: #008000;
+}
+
+h2 {
+    text-align: center;
+}
+@media (max-width: 1480px) {
+    .service-card {
+        width: 100%; /* Une carte par ligne */
+    }
+    header img {
+        width: 50px; /* Réduction de la taille du logo */
+    }
+    .order-button, .btn-green {
+        font-size: 12px; /* Taille de police plus petite pour les boutons */
+        padding: 6px 10px;
+    }
+    .popup-content {
+        width: 95%;
+        max-width: 350px; /* Largeur maximale du popup */
+        padding: 10px;
+    }
+    .popup-description, .popup-image {
+        padding: 5px;
+    }
+}
+
+/* Media Queries spécifiques aux iPhones */
+@media (max-width: 480px) {
+    .service-card {
+        width: 100%; /* Une carte par ligne sur des petits écrans */
+    }
+    header img {
+        width: 50px; /* Réduction de la taille du logo */
+    }
+    .order-button, .btn-green {
+        font-size: 12px; /* Taille de police plus petite pour les boutons */
+        padding: 6px 10px;
+    }
+    .popup-content {
+        width: 95%;
+        max-width: 350px;
+        padding: 10px;
+    }
+    .popup-description, .popup-image {
+        padding: 5px;
+    }
+}
+
+        h3 {
+            text-align: center;
+            color: #008000;
+        }
+        
+        h2 {
+            text-align: center;
+        }
+        
+        h3 {
+            text-align: center;
+            color: #008000;
+        }
+        
+        h2 {
+            text-align: center;
+        }
+        
+    </style>
+</head>
+<body>
+    <header>
+        
+        <header>
+            <img src="{{ url_for('static', filename='images/image.png') }}" alt="Logo Ignifeu" style="width:200px; height:auto;">
+            <h1>IGNIFEU</h1>
+            <p>Installateur agréé des systèmes de sécurité et de protection incendie</p>
+            <div class="btn-container">
+                <a href="{{ url_for('about') }}" class="btn-green"><i class="fas fa-info-circle icon"></i> About us!</a>
+                <a href="{{ url_for('home') }}" class="btn-green"><i class="fas fa-concierge-bell icon"></i> Service</a>
+                <a href="{{ url_for('order_form') }}" class="btn-green"><i class="fas fa-shopping-cart icon"></i> Commander</a>
+            </div>
+        </header>
+        
+    </header>
+    <div class="services-container">
+        <div class="service-card" onclick="showDetails('video_surveillance')">
+            <div class="service-icon">
+                <i class="fas fa-video"></i>
+            </div>
+            <div class="service-info">
+                <img src="{{ url_for('static', filename='images/4.jpg') }}" alt="Système de vidéo surveillance">
+                <h2>Système de vidéo surveillance</h2>
+            </div>
+        </div>
+        <div class="service-card" onclick="showDetails('maintenance')">
+            <div class="service-icon">
+                <i class="fas fa-tools"></i>
+            </div>
+            <div class="service-info">
+                <img src="{{ url_for('static', filename='images/3.jpg') }}" alt="Maintenance">
+                <h2>Maintenance</h2>
+            </div>
+        </div>
+        <div class="service-card" onclick="showDetails('anti_intrusion')">
+            <div class="service-icon">
+                <i class="fas fa-lock"></i>
+            </div>
+            <div class="service-info">
+                <img src="{{ url_for('static', filename='images/5.jpg') }}" alt="Système anti-intrusion">
+                <h2>Système anti-intrusion</h2>
+            </div>
+        </div>
+        <div class="service-card" onclick="showDetails('control_access')">
+            <div class="service-icon">
+                <i class="fas fa-key"></i>
+            </div>
+            <div class="service-info">
+                <img src="{{ url_for('static', filename='images/6.jpg') }}" alt="Contrôle d'accès">
+                <h2>Système de contrôle d'accès</h2>
+            </div>
+        </div>
+        <div class="service-card" onclick="showDetails('fire_detection')">
+            <div class="service-icon">
+                <i class="fas fa-fire"></i>
+            </div>
+            <div class="service-info">
+                <img src="{{ url_for('static', filename='images/9.jpg') }}" alt="Détection d'incendie">
+                <h2>Système de détection d'incendie</h2>
+            </div>
+        </div>
+        <div class="service-card" onclick="showDetails('network_systems')">
+            <div class="service-icon">
+                <i class="fas fa-network-wired"></i>
+            </div>
+            <div class="service-info">
+                <img src="{{ url_for('static', filename='images/7.jpg') }}" alt="Réseaux info-téléphonique">
+                <h2>Système réseaux info-téléphonique</h2>
+            </div>
+        </div>
+        <div class="service-card" onclick="showDetails('home_automation')">
+            <div class="service-icon">
+                <i class="fas fa-home"></i>
+            </div>
+            <div class="service-info">
+                <img src="{{ url_for('static', filename='images/8.jpg') }}" alt="Domotique">
+                <h2>Smart Home "Domotique"</h2>
+            </div>
+        </div>
+        <div class="service-card" onclick="showDetails('fire_fighting')">
+            <div class="service-icon">
+                <i class="fas fa-fire-extinguisher"></i>
+            </div>
+            <div class="service-info">
+                <img src="{{ url_for('static', filename='images/10.jpg') }}" alt="Extinction d'incendie">
+                <h2>Lutte contre l'incendie "Extinction"</h2>
+            </div>
+        </div>
+        <div class="service-card" onclick="showDetails('automation')">
+            <div class="service-icon">
+                <i class="fas fa-robot"></i>
+            </div>
+            <div class="service-info">
+                <img src="{{ url_for('static', filename='images/11.jpg') }}" alt="Automatisation">
+                <h2>Automatisation</h2>
+            </div>
+        </div>
+    </div>
+    
+
+    <div id="popup" class="popup">
+        <div class="popup-content">
+            <div class="popup-description">
+                <h3 id="popup-title"></h3>
+                <p id="popup-text"></p>
+            </div>
+            <div class="popup-image">
+                <img id="popup-image" src="" alt="">
+            </div>
+            <a href="{{ url_for('order_form') }}" class="order-button">Faire une commande</a>
+        </div>
+        <div class="popup-close" onclick="closePopup()">&times;</div>
+    </div>
+    
+    <script>
+        function showDetails(service) {
+            const popup = document.getElementById('popup');
+            const title = document.getElementById('popup-title');
+            const text = document.getElementById('popup-text');
+            const image = document.getElementById('popup-image');
+            
+            // Données pour chaque service (à ajuster selon tes besoins)
+            const serviceData = {
+                video_surveillance: {
+                    title: 'Système de vidéo surveillance',
+                    text: 'Système de Vidéo Surveillance Avancé Assurez la sécurité de votre propriété avec notre système de vidéo surveillance de pointe. Ce kit complet inclut des caméras HD offrant une qualité d’image cristalline, une vision nocturne à longue portée, et un accès à distance sécurisé. Avec une installation facile et une interface utilisateur intuitive, vous pouvez surveiller vos espaces en temps réel depuis n importe où. Idéal pour les résidences et les bureaux.Caractéristiques principales : - Caméras HD 1080p pour une clarté maximale-  Vision nocturne jusquà 30 mètres- Accès à distance via application mobile sécurisée- Détection de mouvement et alertes en temps réel- Installation rapide avec support technique inclus',
+                    imageUrl: '{{ url_for('static', filename='images/4.jpg') }}'
+                },
+                maintenance: {
+                    title: 'Maintenance',
+                    text: 'Service de Maintenance de Systèmes de SécuritéAssurez le bon fonctionnement de vos systèmes de sécurité avec notre service de maintenance complet. Notre équipe de techniciens qualifiés se charge de vérifier, entretenir, et réparer vos équipements pour garantir leur efficacité et prolonger leur durée de vie. Disponible pour une intervention rapide et fiable.',
+                    imageUrl: '{{ url_for('static', filename='images/3.jpg') }}'
+                },
+                anti_intrusion: {
+                    title: 'Système anti-intrusion',
+                    text: 'Sécurisez vos espaces avec notre système anti-intrusion de pointe. Doté de capteurs de mouvement avancés et de détecteurs d’ouverture de porte, il offre une surveillance complète pour détecter toute activité suspecte. En cas d’intrusion, une alarme forte se déclenche immédiatement pour dissuader les intrus et alerter les occupants ou les services de sécurité.Caractéristiques principales :- Capteurs de mouvement haute sensibilité- Détecteurs d ouverture de porte et de fenêtre- Alarme sonore puissante- Notification instantanée sur smartphone- Installation facile et configuration personnalisable',
+                    imageUrl: '{{ url_for('static', filename='images/5.jpg') }}'
+                },
+                control_access: {
+                    title: 'Système de contrôle d\'accès',
+                    text: 'Renforcez la sécurité de vos installations avec notre système de contrôle d\'accès avancé. Ce système vous permet de gérer facilement qui entre et sort de vos locaux grâce à des technologies de pointe comme des lecteurs de cartes RFID, des claviers à code, et des dispositifs biométriques. Configurez des horaires d\'accès, générez des rapports, et surveillez en temps réel pour une sécurité renforcée. Tout cela avec des lecteurs de cartes RFID et claviers à code, options biométriques pour une sécurité accrue, gestion des horaires d\'accès et création de profils utilisateurs, surveillance en temps réel avec alertes instantanées, installation flexible adaptée à vos besoins.',
+                    imageUrl: '{{ url_for('static', filename='images/6.jpg') }}'
+                },
+                fire_detection: {
+                    title: 'Système de détection d\'incendie',
+                    text: 'Système de Détection d\'Incendie Avancé Assurez une protection optimale contre les incendies avec notre système de détection d\'incendie de haute technologie. Équipé de détecteurs de fumée, de chaleur, et d\'alarme sonore, ce système détecte rapidement les signes d\'incendie pour protéger vos biens et garantir votre sécurité. Idéal pour les résidences et les entreprises.',
+                    imageUrl: '{{ url_for('static', filename='images/9.jpg') }}'
+                },
+                network_systems: {
+                    title: 'Système réseaux info-téléphonique',
+                    text: 'Optimisez la connectivité de votre entreprise avec notre système réseaux info-téléphonique. Ce système intégré fournit des solutions de communication et de gestion de données fiables, avec des équipements de pointe pour un réseau performant et sécurisé. Idéal pour les bureaux, les centres d\'affaires et les établissements de grande envergure.',
+                    imageUrl: '{{ url_for('static', filename='images/7.jpg') }}'
+                },
+                home_automation: {
+                    title: 'Smart Home "Domotique"',
+                    text: 'Découvrez le confort et la simplicité de notre système Smart Home "Domotique". Grâce à une intégration fluide avec vos appareils domestiques, vous pouvez automatiser et contrôler l\'éclairage, la température, les systèmes de sécurité, et d\'autres aspects de votre maison depuis une interface centralisée. Idéal pour créer un environnement plus pratique et sécurisé. Caractéristiques principales : - Contrôle à distance via application mobile - Automatisation des éclairages et des appareils électriques - Gestion de la climatisation et du chauffage - Intégration avec les systèmes de sécurité et de surveillance - Installation facile et personnalisable selon vos besoins.',
+                    imageUrl: '{{ url_for('static', filename='images/8.jpg') }}'
+                },
+                fire_fighting: {
+                    title: 'Lutte contre l\'incendie "Extinction"',
+                    text: 'Offrez une défense robuste contre les incendies avec notre système "Extinction". Conçu pour intervenir rapidement et efficacement en cas de sinistre, ce système intègre des technologies avancées pour une suppression optimale des incendies. Protégez vos installations, vos biens, et vos employés avec des équipements de suppression modernes.',
+                    imageUrl: '{{ url_for('static', filename='images/10.jpg') }}'
+                },
+                automation: {
+                    title: 'Automatisation',
+                    text: 'Boostez la performance de votre entreprise avec notre solution d\'automatisation. Grâce à une intégration transparente avec vos systèmes existants, vous pouvez automatiser des tâches clés, gérer des processus complexes et réduire les erreurs humaines. Notre système est adapté à divers environnements industriels et commerciaux pour améliorer l\'efficacité opérationnelle.',
+                    imageUrl: '{{ url_for('static', filename='images/11.jpg') }}'
+                }
+            };
+        
+            const data = serviceData[service];
+            if (data) {
+                title.textContent = data.title;
+                text.textContent = data.text;
+                image.src = data.imageUrl;
+                popup.style.display = 'flex';
+            }
+        }
+        
+        function closePopup() {
+            document.getElementById('popup').style.display = 'none';
+        }
+    </script>
+  
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-content">
+        <h2><i class="fas fa-envelope"></i> Contact Us</h2>
+        <p><i class="fas fa-envelope"></i> Email: contact@ignifeu.com</p>
+        <p><i class="fas fa-phone"></i> Phone: 0550 65 79 09</p>
+        <p><i class="fas fa-map-marker-alt"></i> Address: P7QR+C2P, Rouiba, Algiers, Algeria</p>
+    </div>
+</footer>
+
+
+    
+</body>
+</html>
